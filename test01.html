@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>自我介紹</title>
+  <style>
+    :root{
+      --bg: #ffffff;
+      --fg: #000000;
+      --accent: #000000;
+      --muted: #f2f2f2;
+      --radius: 12px;
+      font-family: Inter, "Noto Sans TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--fg);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .card{
+      width:100%;
+      max-width:900px;
+      border-radius:18px;
+      box-shadow:0 6px 30px rgba(0,0,0,0.08);
+      overflow:hidden;
+      border:2px solid var(--fg);
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:0;
+      background:linear-gradient(180deg, var(--bg), var(--muted));
+    }
+
+    header{
+      grid-column:1 / -1;
+      padding:28px 34px;
+      background:var(--fg);
+      color:var(--bg);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:1px;
+      font-weight:700;
+    }
+    p.sub{margin:0; opacity:0.85}
+
+    main{
+      padding:34px;
+      min-height:260px;
+    }
+
+    .controls{
+      padding:34px;
+      border-left:2px solid rgba(0,0,0,0.06);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:stretch;
+      justify-content:center;
+    }
+
+    .btn{
+      appearance:none;
+      -webkit-appearance:none;
+      border-radius:10px;
+      padding:12px 16px;
+      font-weight:600;
+      font-size:15px;
+      border:2px solid var(--fg);
+      background:transparent;
+      color:var(--fg);
+      cursor:pointer;
+      transition:all .18s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .btn:focus{outline:3px solid rgba(0,0,0,0.08)}
+    .btn:hover{transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+    .btn.active{background:var(--fg); color:var(--bg)}
+
+    .content{opacity:1; transition:opacity .25s ease;}
+    .content.hidden{opacity:0; height:0; overflow:hidden}
+
+    /* Responsive */
+    @media (max-width:840px){
+      .card{grid-template-columns:1fr;}
+      .controls{border-left:none; border-top:2px solid rgba(0,0,0,0.06)}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="region" aria-label="自我介紹卡片">
+    <header>
+      <div>
+        <h1>自我介紹</h1>
+        <p class="sub">簡潔的黑白主題範本 — 點選右側按鈕切換內容</p>
+      </div>
+      <div aria-hidden="true">● ○ ●</div>
+    </header>
+
+    <main>
+      <section id="section-personal" class="content">
+        <h2>個人資訊</h2>
+        <p>你好，我是（你的名字）。這裡可以放簡短的個人自介、聯絡方式或一句座右銘。</p>
+      </section>
+
+      <section id="section-experience" class="content hidden" aria-hidden="true">
+        <h2>經歷</h2>
+        <p>在這個區塊放你的學經歷、工作經驗或重要專案摘要，條列式或短段落皆可。</p>
+      </section>
+
+      <section id="section-skills" class="content hidden" aria-hidden="true">
+        <h2>技能</h2>
+        <p>列出你擅長的技能、工具或語言，例如：HTML, CSS, JavaScript, React, 資料分析等。</p>
+      </section>
+    </main>
+
+    <aside class="controls" role="navigation" aria-label="分類按鈕">
+      <button class="btn active" data-target="section-personal" aria-pressed="true">個人資訊</button>
+      <button class="btn" data-target="section-experience" aria-pressed="false">經歷</button>
+      <button class="btn" data-target="section-skills" aria-pressed="false">技能</button>
+    </aside>
+  </div>
+
+  <script>
+    // 簡單的切換邏輯：切換按鈕 active 狀態與對應區塊
+    const buttons = Array.from(document.querySelectorAll('.btn'));
+    const sections = Array.from(document.querySelectorAll('main .content'));
+
+    function show(id){
+      sections.forEach(s=>{
+        if(s.id === id){
+          s.classList.remove('hidden');
+          s.removeAttribute('aria-hidden');
+        } else {
+          s.classList.add('hidden');
+          s.setAttribute('aria-hidden','true');
+        }
+      });
+
+      buttons.forEach(b=>{
+        const active = b.dataset.target === id;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', String(active));
+      });
+    }
+
+    buttons.forEach(b=> b.addEventListener('click', ()=> show(b.dataset.target)));
+
+    // 初始顯示
+    show('section-personal');
+  </script>
+</body>
+</html>
